@@ -1,7 +1,9 @@
-package membreapi;
+package membreapi.services;
 
 
 import io.jsonwebtoken.security.InvalidKeyException;
+import membreapi.models.Membre;
+import membreapi.repositories.MembreRepository;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;

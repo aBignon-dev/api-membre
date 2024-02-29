@@ -1,4 +1,4 @@
-package membreapi;
+package membreapi.dto;
 
 public class LoginDTO {
 

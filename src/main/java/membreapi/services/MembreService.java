@@ -1,6 +1,10 @@
-package membreapi;
+package membreapi.services;
 
 
+import membreapi.models.Membre;
+import membreapi.dto.MembreDTO;
+import membreapi.mappers.MembreMapper;
+import membreapi.repositories.MembreRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +22,7 @@ public class MembreService {
     }
 
     public MembreDTO createMembre(MembreDTO membreDTO) {
-        Membre membre = membreMapper.toEntity(membreDTO); 
+        Membre membre = membreMapper.toEntity(membreDTO);
         Membre savedMembre = membreRepository.save(membre); 
         return membreMapper.toDto(savedMembre);
     }

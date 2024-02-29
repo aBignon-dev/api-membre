@@ -1,4 +1,4 @@
-package membreapi;
+package membreapi.models;
 
 import jakarta.persistence.*;
 

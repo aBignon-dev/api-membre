@@ -1,5 +1,14 @@
-package membreapi;
+package membreapi.controllers;
 
+import membreapi.*;
+import membreapi.dto.MembreDTO;
+import membreapi.dto.MembreResponseDTO;
+import membreapi.dto.UpdateDTO;
+import membreapi.models.Membre;
+import membreapi.repositories.MembreRepository;
+import membreapi.services.DeleteService;
+import membreapi.services.MembreService;
+import membreapi.services.UpdateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

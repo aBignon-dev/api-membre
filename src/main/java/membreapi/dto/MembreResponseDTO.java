@@ -1,4 +1,4 @@
-package membreapi;
+package membreapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

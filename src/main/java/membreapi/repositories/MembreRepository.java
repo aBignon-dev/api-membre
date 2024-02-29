@@ -1,7 +1,8 @@
-package membreapi;
+package membreapi.repositories;
 
 
 
+import membreapi.models.Membre;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MembreRepository extends JpaRepository<Membre, Long> {

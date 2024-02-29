@@ -1,5 +1,7 @@
-package membreapi;
+package membreapi.services;
 
+import membreapi.models.Membre;
+import membreapi.repositories.MembreRepository;
 import org.springframework.stereotype.Service;
 
 @Service

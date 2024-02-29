@@ -1,6 +1,9 @@
-package membreapi;
+package membreapi.mappers;
 
 
+import membreapi.models.Membre;
+import membreapi.dto.MembreDTO;
+import membreapi.services.MembreService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -8,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Mapper(unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE,
-        componentModel = "spring", uses=MembreService.class)
+        componentModel = "spring", uses= MembreService.class)
 public interface MembreMapper {
 
 
