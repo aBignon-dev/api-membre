@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 @RestController
-@RequestMapping("/inscription")
+@RequestMapping("/membres")
 public class InscriptionController {
 
     private final MembreService membreService;

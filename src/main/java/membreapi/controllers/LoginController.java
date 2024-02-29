@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/membres")
 public class LoginController {
 
     private final LoginService loginService;
@@ -23,7 +23,7 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginRequest, HttpServletResponse response) {
         if (loginRequest.getMail() != null && loginRequest.getMotDePasse() != null
                 && !loginRequest.getMail().isEmpty() && !loginRequest.getMotDePasse().isEmpty()) {
