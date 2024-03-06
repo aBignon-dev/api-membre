@@ -19,6 +19,7 @@ public class MembreDTO {
 	private LocalDate dateNaissance;
 
 	@NotBlank(message = "L'adresse est requise")
+	private String adresse;
 
 	@NotBlank(message = "L'adresse email est requise")
 	@Email(message = "L'adresse email doit être valide")
@@ -36,7 +37,7 @@ public class MembreDTO {
 		this.id = id;
 	}
 
-	private String adresse;
+
 
 	public String getPrenom() {
 		return prenom;

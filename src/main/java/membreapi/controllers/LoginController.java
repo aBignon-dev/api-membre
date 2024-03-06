@@ -37,7 +37,7 @@ public class LoginController {
                     cookie.setPath("/");
                     cookie.setMaxAge(3600); // Durée de validité du cookie en secondes (par exemple, 1 heure)
                     response.addCookie(cookie);
-                    return ResponseEntity.ok("Login successful");
+                    return ResponseEntity.ok(cookie);
                 case "wrong_password":
                     // Mot de passe incorrect, renvoyer une réponse avec une erreur 401
                     ErrorResponse wrongPasswordResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),

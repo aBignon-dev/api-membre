@@ -9,11 +9,14 @@ import membreapi.repositories.MembreRepository;
 import membreapi.services.DeleteService;
 import membreapi.services.MembreService;
 import membreapi.services.UpdateService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -37,6 +40,52 @@ public class MembreController {
         this.membreRepository = membreRepository;
     }
 
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<?> createMembre(@RequestBody MembreDTO membreDTO) {
+        try {
+            // Vérifier si le membre envoyé est complet
+            if (membreDTO.getNom() == null || membreDTO.getPrenom() == null ||
+                    membreDTO.getDateNaissance() == null || membreDTO.getAdresse() == null ||
+                    membreDTO.getMail() == null || membreDTO.getMotDePasse() == null) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("Tous les champs du membre doivent être renseignés.");
+            }
+
+            // Vérifier si un membre avec cet email existe déjà
+            if (membreRepository.existsByMail(membreDTO.getMail())) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("Un membre avec cet email existe déjà.");
+            }
+
+            // Vérifier si un membre avec le même nom et prénom existe déjà
+            if (membreRepository.existsByNomAndPrenom(membreDTO.getNom(), membreDTO.getPrenom())) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body("Un membre avec ce nom et prénom existe déjà.");
+            }
+
+            MembreDTO createdMembre = membreService.createMembre(membreDTO);
+            String successMessage = "{\"success\": true, \"message\": \"Membre créé\"}";
+
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(createdMembre.getId())
+                    .toUri();
+
+            return ResponseEntity
+                    .created(location)
+                    .body(successMessage);
+        } catch (DataIntegrityViolationException e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "Erreur création de membres");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+    }
+
     private ResponseEntity<?> validateMember(UpdateDTO memberUpdateDTO, String membreIdString) {
         // Récupérer l'ID du membre à partir de la chaîne
         Long membreId = Long.parseLong(membreIdString);
@@ -56,17 +105,6 @@ public class MembreController {
             return ResponseEntity.badRequest().body(errorResponse);
         }
 
-        // Vérifier si la date de naissance donne un âge supérieur ou égal à 18 ans
-        LocalDate today = LocalDate.now();
-        LocalDate dateNaissance = memberUpdateDTO.getDateNaissance();
-        Period age = Period.between(dateNaissance, today);
-        if (age.getYears() < 18) {
-            // Si l'âge calculé est inférieur à 18 ans, renvoyer une ResponseEntity avec un message d'erreur approprié
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),
-                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                    "La date de naissance donne un âge inférieur à 18 ans.");
-            return ResponseEntity.badRequest().body(errorResponse);
-        }
 
         // Si toutes les validations sont réussies, retourner null pour indiquer que la validation a réussi
         return null;
@@ -109,7 +147,7 @@ public class MembreController {
 
     // Méthode pour convertir un MembreDTO en MembreResponseDTO
 // Méthode pour convertir un MembreDTO en MembreResponseDTO
-    private MembreResponseDTO convertToResponseDTO(MembreDTO membreDTO) {
+    public MembreResponseDTO convertToResponseDTO(MembreDTO membreDTO) {
         MembreResponseDTO responseDTO = new MembreResponseDTO();
         responseDTO.setId(membreDTO.getId());
         responseDTO.setNom(membreDTO.getNom());
@@ -132,8 +170,9 @@ public class MembreController {
                 return validationResponse;
             }
             Long membreId = Long.parseLong(membreIdString);
-            MembreDTO updatedMember = updateService.updateMembre(membreId, memberDTO);
-            return ResponseEntity.ok(updatedMember);
+            updateService.updateMembre(membreId, memberDTO);
+            String successMessage = "{\"success\": true, \"message\": \"Membre mis à a jour\"}";
+            return ResponseEntity.ok(successMessage);
         } catch (RuntimeException e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(),
                                                              HttpStatus.NOT_FOUND.getReasonPhrase(),
@@ -153,12 +192,13 @@ public class MembreController {
             deleteService.deleteMembre(membreId);
             
             // Répondre avec un statut 204 No Content
-            return ResponseEntity.ok("Membre supprimé");
+
+            return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
-            // Gérer les cas où l'ID du membre n'est pas un UUID valide
+
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), 
                                                              HttpStatus.BAD_REQUEST.getReasonPhrase(), 
-                                                             "L'ID du membre n'est pas un UUID valide : " + membreIdString);
+                                                             "L'ID invalide : " + membreIdString);
             return ResponseEntity.badRequest().body(errorResponse);
         } catch (RuntimeException e) {
             // Gérer les cas où le membre n'est pas trouvé
