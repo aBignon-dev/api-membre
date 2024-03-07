@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,32 +66,29 @@ public class InscriptionController {
         Long evenementId = Long.parseLong(evenementIdString);
 
 
-            List<Inscription> inscriptions = inscriptionRepository.findByEvenementId(evenementId);
+        List<Inscription> inscriptions = inscriptionRepository.findByEvenementId(evenementId);
 
-            // Création de la liste de membres à partir des inscriptions
-            List<MembreDTO> membres = new ArrayList<>();
-            for (Inscription inscription : inscriptions) {
-                // Pour chaque inscription, récupérez les détails complets du membre
-                MembreDTO membreDTO = membreService.getMembreParId(inscription.getMembreId());
-                if (membreDTO != null) {
-                    membres.add(membreDTO);
-                }
+        // Création de la liste de membres à partir des inscriptions
+        List<MembreDTO> membres = new ArrayList<>();
+        for (Inscription inscription : inscriptions) {
+            // Pour chaque inscription, récupérez les détails complets du membre
+            MembreDTO membreDTO = membreService.getMembreParId(inscription.getMembreId());
+            if (membreDTO != null) {
+                membres.add(membreDTO);
             }
+        }
 
-            // Convertir les membres en MembreResponseDTO
-            List<MembreResponseDTO> responseDTOs = membres.stream()
-                    .map(this::convertToResponseDTO)
-                    .collect(Collectors.toList());
+        // Convertir les membres en MembreResponseDTO
+        List<MembreResponseDTO> responseDTOs = membres.stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
 
-            // Retourner la liste des membres sous forme de ResponseEntity
-            if(!responseDTOs.isEmpty())
+        // Retourner la liste des membres sous forme de ResponseEntity
+        if (!responseDTOs.isEmpty())
             return ResponseEntity.ok(responseDTOs);
-            else {
-                ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                        HttpStatus.NOT_FOUND.getReasonPhrase(),"Il n'y a pas de membres inscrit a l'evenement");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-            }
-
+    else {
+            return ResponseEntity.ok(Collections.emptyList()); // Retourner une liste vide
+        }
 
     }
 
