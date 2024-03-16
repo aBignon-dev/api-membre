@@ -1,38 +1,25 @@
 package membreapi.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
+/**
+ * DTO utilisé pour mettre à jour les informations d'un membre.
+ */
+@Getter
+@Setter
 public class UpdateDTO {
-	
-	    private String prenom;
-	    private String nom;
-	    private LocalDate dateNaissance;
-	    private String adresse;
-		private String motDePasse;
 
-	    // Getters et setters
-	    public String getPrenom() {
-			return prenom;
-		}
+    private String prenom; // Nouveau prénom du membre
 
+    private String nom; // Nouveau nom du membre
 
-		public String getNom() {
-			return nom;
-		}
+    private LocalDate dateNaissance; // Nouvelle date de naissance du membre
 
-		public LocalDate getDateNaissance() {
-			return dateNaissance;
-		}
+    private String adresse; // Nouvelle adresse du membre
 
-		public String getAdresse() {
-			return adresse;
-		}
-
-		public String getMotDePasse() {
-			return motDePasse;
-		}
-
-
-
+    private String motDePasse; // Nouveau mot de passe du membre
 
 }
