@@ -2,76 +2,32 @@ package membreapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
+/**
+ * DTO représentant la réponse contenant les informations d'un membre.
+ */
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MembreResponseDTO {
-    private String id;
-    private String nom;
 
-    private LocalDate dateNaissance;
+    private String id; // Identifiant du membre
 
-    private String mail ;
+    private String nom; // Nom du membre
 
-    private String adresse;
+    private LocalDate dateNaissance; // Date de naissance du membre
+
+    private String mail; // Adresse email du membre
+
+    private String adresse; // Adresse du membre
+
+    private String prenom; // Prénom du membre
 
     public MembreResponseDTO() {
-
     }
-    public String getId() {
-        return id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public LocalDate getDateNaissance() {
-        return dateNaissance;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public String getAdresse() {
-        return adresse;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
-
-    public void setDateNaissance(LocalDate dateNaissance) {
-        this.dateNaissance = dateNaissance;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    private String prenom;
-
-
-    // Autres attributs sans le mot de passe
-
-    // Constructeurs, getters et setters
 }
